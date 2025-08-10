@@ -54,6 +54,11 @@ export default function SignUpPage() {
   ];
 
   const passwordStrength = passwordRequirements.filter((req) => req.met).length;
+  const progressValue = Math.min(
+    100,
+    Math.max(0, Math.floor((passwordStrength / 5) * 100))
+  );
+
   const passwordMatch =
     formData.password === formData.confirmPassword &&
     formData.confirmPassword !== "";
@@ -235,10 +240,7 @@ export default function SignUpPage() {
                         {passwordStrength}/5
                       </span>
                     </div>
-                    <Progress
-                      value={(passwordStrength / 5) * 100}
-                      className="h-2"
-                    />
+                    <Progress value={progressValue} className="h-2" />
                     <div className="space-y-1">
                       {passwordRequirements.map((req, index) => (
                         <div
