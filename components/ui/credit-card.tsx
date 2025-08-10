@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, Target } from 'lucide-react';
 
 interface CreditCardProps {
-  type: 'visa' | 'mastercard';
+  type: string;
   number: string;
   holder: string;
   expires: string;
