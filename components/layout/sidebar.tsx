@@ -16,7 +16,20 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 
-const baseNavItems = [
+type NavChild = {
+  label: string;
+  href: string;
+  id?: string;
+};
+
+type NavItem = {
+  icon: React.ComponentType<any>;
+  label: string;
+  href: string;
+  hasChildren?: boolean;
+  children?: NavChild[];
+};
+const baseNavItems: NavItem[] = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
   { icon: CreditCard, label: "Cards", href: "/cards" },
   { icon: BarChart3, label: "Analytics", href: "/analytics" },
