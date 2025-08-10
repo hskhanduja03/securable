@@ -240,7 +240,6 @@ export default function SignUpPage() {
                         {passwordStrength}
                       </span>
                     </div>
-                    <Progress value={progressValue} className="h-2" />
                     <div className="space-y-1">
                       {passwordRequirements.map((req, index) => (
                         <div
