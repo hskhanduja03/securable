@@ -254,6 +254,7 @@ export default function PaymentGroupDetailsPage() {
               status="active"
               gradient="from-purple-500 to-indigo-600"
               className="mx-auto"
+              balance="1234"
             />
             <input
               className="w-full p-2 border rounded"
