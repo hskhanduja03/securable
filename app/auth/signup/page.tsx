@@ -237,7 +237,7 @@ export default function SignUpPage() {
                         Password strength
                       </span>
                       <span className="text-xs text-gray-500">
-                        {passwordStrength}/5
+                        {passwordStrength}
                       </span>
                     </div>
                     <Progress value={progressValue} className="h-2" />
