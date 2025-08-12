@@ -130,8 +130,7 @@ export default function CardsPage() {
                         number={card.number}
                         holder={card.holder}
                         expires={card.expires}
-                        balance={card.balance}
-                        status={card.status}
+                        status={true}
                         gradient={card.gradient}
                         className="max-w-sm"
                       />
