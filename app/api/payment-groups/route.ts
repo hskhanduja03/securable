@@ -89,7 +89,6 @@ export async function POST(req: Request) {
       name,
       description,
       user: new mongoose.Types.ObjectId(userId),
-      methods: [],
     });
 
     await group.save();

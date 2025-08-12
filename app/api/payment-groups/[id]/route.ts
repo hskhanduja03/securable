@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
 import { PaymentGroup } from "@/db/models/PaymentGroup"; // Adjust the import as per your project structure
 import { connectDB } from "@/db/mongodb";
+import { PaymentMethod } from "@/db/models/PaymentMethod";
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   // Connect to DB
@@ -9,13 +9,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 
   try {
     // Find the payment group by its _id and populate the methods field
-    const group = await PaymentGroup.findById(params.id)
-      .populate({
-        path: "methods", // Path to populate
-        model: "PaymentMethod", // Model to populate
-      })
-      .lean() // Use lean() to get plain objects
-      .exec();
+    const group = await PaymentGroup.findById(params.id).populate("methods").lean();
 
     console.log(group); // Log to see the output and verify population
 
@@ -34,7 +28,6 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     );
   }
 }
-
 
 export async function PUT(
   req: Request,

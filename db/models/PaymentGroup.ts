@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { PaymentMethod } from "./PaymentMethod";
 
 export interface IPaymentGroup extends Document {
   name: string; // e.g., "Credit Card"

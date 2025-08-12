@@ -10,51 +10,36 @@ import { CreditCard } from "@/components/ui/credit-card";
 import { StatCard } from "@/components/ui/stat-card";
 import { Modal } from "@/components/ui/Modal";
 import { useAuth } from "@/context/AuthContext";
+import { getRandomGradient } from "@/lib/randombg";
 
-const cardData = [
-  {
-    type: "icici" as const,
-    number: "3455 4562 7710 3507",
-    holder: "Alexander Munoz",
-    expires: "02/30",
-    balance: "$34,938 EUR",
-    status: "active" as const,
-    gradient: "from-orange-500 to-red-600",
-  },
-  {
-    type: "hdfc" as const,
-    number: "5412 7534 8912 3456",
-    holder: "John Carter",
-    expires: "05/31",
-    balance: "$12,847.5 EUR",
-    status: "active" as const,
-    gradient: "from-gray-600 to-gray-800",
-  },
-  {
-    type: "idfc" as const,
-    number: "4532 1234 5678 9012",
-    holder: "John Carter",
-    expires: "08/29",
-    balance: "$0.00 EUR",
-    status: "inactive" as const,
-    gradient: "from-blue-500 to-cyan-600",
-  },
-];
+interface PaymentMethodDetails {
+  company: string;
+  cardNumber: string;
+  cardHolderName: string;
+  expiryDate: string;
+}
+
+interface PaymentMethod {
+  details: PaymentMethodDetails;
+  active: boolean;
+  bgColor?: string;
+}
 
 export default function PaymentGroupDetailsPage() {
   const { groupName: groupId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
-  const [paymentMethodsOfGroup, setPaymentMethodsOfGroup] = useState([]);
+  const [paymentMethodsOfGroup, setPaymentMethodsOfGroup] = useState<
+    PaymentMethod[]
+  >([]);
   const [cardDetails, setCardDetails] = useState({
     number: "",
     holder: "",
     expires: "",
     cvc: "",
-    company: "ICICI",
+    company: "",
   });
-  const { paymentMethods } = useAuth();
-  console.log("paymentMethodsOfGroup", paymentMethodsOfGroup);
+  const { paymentMethods, userId } = useAuth();
 
   useEffect(() => {
     const fetchPaymentGroupData = async () => {
@@ -112,17 +97,18 @@ export default function PaymentGroupDetailsPage() {
   // Handles form submission
   const handleSaveCard = async () => {
     const cardDataToSave = {
-      user: "60d5f8c5b6f68d001c8b93fa", // Replace with actual user ID
-      group: groupId, // Pass the current group ID
-      name: `Card: ${cardDetails.company}`,
+      user: userId,
+      group: groupId,
+      name: `${cardDetails.company} Card`,
       active: true,
       details: {
-        cardNumberLast4: cardDetails.number.slice(-4),
+        cardNumber: cardDetails.number,
         cardHolderName: cardDetails.holder,
         expiryDate: cardDetails.expires,
         cvv: cardDetails.cvc,
         company: cardDetails.company,
       },
+      bgColor: getRandomGradient(),
     };
 
     try {
@@ -136,7 +122,7 @@ export default function PaymentGroupDetailsPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Card saved:", data);
+        setPaymentMethodsOfGroup((prev) => [...prev, data]);
         closeModal(); // Close the modal after saving
       } else {
         const errorData = await response.json();
@@ -152,42 +138,45 @@ export default function PaymentGroupDetailsPage() {
       <Card className="bg-white shadow-lg rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between pb-4">
           <div>
-            <CardTitle className="text-lg">Your {groupName}</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
-              Manage your {groupName.toLowerCase()} and balances
-            </p>
+            <CardTitle className="text-lg">
+              Manage your {groupName}&apos;s
+            </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {cardData.map((card, index) => (
+          {paymentMethodsOfGroup.map((card, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * index }}
-              className="border rounded-xl p-4 bg-gradient-to-r from-blue-50 to-green-50/40"
+              className="border rounded-xl p-4 bg-gradient-to-r from-orange-50 to-orange-50/40"
             >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-                <CreditCard {...card} className="max-w-sm" />
+                <CreditCard
+                  type={card.details.company}
+                  number={card.details.cardNumber}
+                  holder={card.details.cardHolderName}
+                  expires={card.details.expiryDate}
+                  status={card.active}
+                  gradient={card.bgColor}
+                  className="max-w-sm"
+                />
                 {/* Details */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Balance</p>
-                    <p className="font-semibold">{card.balance}</p>
-                  </div>
-                  <div>
                     <p className="text-sm text-gray-600 mb-1">Card Number</p>
-                    <p className="font-semibold">
-                      •••• {card.number.slice(-4)}
-                    </p>
+                    <p className="font-semibold">{card.details.cardNumber}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Expires</p>
-                    <p className="font-semibold">{card.expires}</p>
+                    <p className="font-semibold">{card.details.expiryDate}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Card Holder</p>
-                    <p className="font-semibold">{card.holder}</p>
+                    <p className="font-semibold">
+                      {card.details.cardHolderName}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -216,23 +205,6 @@ export default function PaymentGroupDetailsPage() {
         </Button>
       </motion.div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Balance"
-          value="$12,500"
-          change="4.1%"
-          changeType="positive"
-        />
-        <StatCard
-          title="Transactions"
-          value="156"
-          change="2.5%"
-          changeType="negative"
-        />
-        <StatCard title="Avg. Transaction" value="$80" />
-      </div>
-
       {/* Render cards */}
       {groupName.toLowerCase().includes("card")
         ? renderCards()
@@ -251,10 +223,9 @@ export default function PaymentGroupDetailsPage() {
               number={cardDetails.number || "#### #### #### ####"}
               holder={cardDetails.holder || "FULL NAME"}
               expires={cardDetails.expires || "MM/YY"}
-              status="active"
+              status={true}
               gradient="from-purple-500 to-indigo-600"
               className="mx-auto"
-              balance="1234"
             />
             <input
               className="w-full p-2 border rounded"
@@ -268,6 +239,14 @@ export default function PaymentGroupDetailsPage() {
               value={cardDetails.holder}
               onChange={(e) =>
                 setCardDetails({ ...cardDetails, holder: e.target.value })
+              }
+            />
+            <input
+              className="w-full p-2 border rounded"
+              placeholder="Card Company"
+              value={cardDetails.company}
+              onChange={(e) =>
+                setCardDetails({ ...cardDetails, company: e.target.value })
               }
             />
             <div className="flex gap-4">

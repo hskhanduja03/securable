@@ -156,8 +156,7 @@ export default function Dashboard() {
                 number="3455 4562 7710 3507"
                 holder="Alexander Munoz"
                 expires="02/30"
-                balance="$34,938 EUR"
-                status="active"
+                status={true}
               />
             </motion.div>
 

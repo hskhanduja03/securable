@@ -10,16 +10,18 @@ export interface IPaymentMethod extends Document {
     upiId?: string;
 
     // Card-specific
-    cardNumberLast4?: string;
+    cardNumber?: string;
     cardHolderName?: string;
     expiryDate?: string;
     cvv?: string;
     company?: string; // e.g., Visa, Mastercard
 
     // Bank transfer / NEFT
-    accountNumberLast4?: string;
+    accountNumber?: string;
     ifscCode?: string;
+
   };
+  bgColor: string;
 }
 
 const PaymentMethodSchema: Schema<IPaymentMethod> = new Schema(
@@ -27,19 +29,20 @@ const PaymentMethodSchema: Schema<IPaymentMethod> = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Reference to the User
     group: { type: Schema.Types.ObjectId, ref: "PaymentGroup", required: true }, // Reference to the PaymentGroup
     name: { type: String, required: true, trim: true },
-    active: { type: Boolean, default: true }, // active by default
+    active: { type: Boolean, default: true },
     details: {
       upiId: { type: String },
 
-      cardNumberLast4: { type: String },
+      cardNumber: { type: String },
       cardHolderName: { type: String },
       expiryDate: { type: String },
       cvv: { type: String },
       company: { type: String },
 
-      accountNumberLast4: { type: String },
+      accountNumber: { type: String },
       ifscCode: { type: String },
     },
+    bgColor: { type: String, required: true },
   },
   { timestamps: true }
 );

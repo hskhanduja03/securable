@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
-import { PaymentMethod } from "@/db/models/PaymentMethod"; // Import your PaymentMethod model
+import { PaymentMethod } from "@/db/models/PaymentMethod";
 import { PaymentGroup } from "@/db/models/PaymentGroup";
 import { connectDB } from "@/db/mongodb";
 
-
-
-// Create Payment Method
+// Create Payment Method and add to existing Payment Group
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { user, group, name, active, details } = await req.json();
 
-    // Validation for required fields based on name type
+    const { user, group, name, active, details, bgColor } = await req.json();
+
+    // Required field check
     if (!user || !group || !name) {
       return NextResponse.json(
         { error: "Missing required fields: user, group, or name" },
@@ -20,19 +18,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // Payment Method Validation Logic
+    // Validation logic
     if (name.includes("Card")) {
       if (
-        !details.cardNumberLast4 ||
+        !details.cardNumber ||
         !details.cardHolderName ||
         !details.expiryDate ||
         !details.cvv ||
-        !details.company
+        !details.company||
+        !bgColor
       ) {
         return NextResponse.json(
           {
             error:
-              "Missing card details: cardNumberLast4, cardHolderName, expiryDate, cvv, company",
+              "Missing card details: cardNumber, cardHolderName, expiryDate, cvv, company",
           },
           { status: 400 }
         );
@@ -42,43 +41,36 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Missing UPI ID" }, { status: 400 });
       }
     } else if (name.includes("NEFT") || name.includes("Bank")) {
-      if (!details.accountNumberLast4 || !details.ifscCode) {
+      if (!details.accountNumber || !details.ifscCode) {
         return NextResponse.json(
           {
-            error:
-              "Missing bank transfer details: accountNumberLast4, ifscCode",
+            error: "Missing bank transfer details: accountNumber, ifscCode",
           },
           { status: 400 }
         );
       }
     }
 
-    // Create the Payment Method
-    const paymentMethod = new PaymentMethod({
+    // 1️⃣ Create and save the Payment Method
+    const paymentMethod = await PaymentMethod.create({
       user,
       group,
       name,
       active,
       details,
+      bgColor,
     });
 
-    // Save the Payment Method to the database
-    await paymentMethod.save();
+    const updatedGroup = await PaymentGroup.findByIdAndUpdate(
+      group,
+      { $push: { methods: paymentMethod._id } },
+      { new: true }
+    );
 
-    // Now, let's create a new ObjectId manually
-    const newObjectId = new mongoose.Types.ObjectId();
-
-    // Find the group to update
-    const groupToUpdate = await PaymentGroup.findById(group); // Find the group by ID
-    if (!groupToUpdate) {
+    if (!updatedGroup) {
       return NextResponse.json({ error: "Group not found" }, { status: 404 });
     }
 
-    // Push the new ObjectId to the methods array (simulating the 'paymentMethod._id')
-    groupToUpdate.methods.push(newObjectId); // Push the new manually created ObjectId
-    await groupToUpdate.save(); // Save the updated Group
-
-    // Return the newly created Payment Method
     return NextResponse.json(paymentMethod, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

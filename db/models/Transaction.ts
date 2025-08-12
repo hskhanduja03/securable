@@ -8,6 +8,8 @@ export interface ITransaction extends Document {
   category: string;
   date: Date;
   notes?: string;
+  name: string;
+  type: "credit" | "debit";
 }
 
 const TransactionSchema: Schema<ITransaction> = new Schema(
@@ -25,6 +27,12 @@ const TransactionSchema: Schema<ITransaction> = new Schema(
     },
     amount: { type: Number, required: true },
     category: { type: String, required: true, trim: true },
+    name: { type: String, required: true, trim: true },
+    type: {
+      type: String,
+      enum: ["credit", "debit"],
+      required: true,
+    },
     date: { type: Date, required: true },
     notes: { type: String, trim: true },
   },

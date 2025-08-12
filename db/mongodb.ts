@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-
+import { PaymentGroup } from "@/db/models/PaymentGroup";
+import { PaymentMethod } from "@/db/models/PaymentMethod";
+import { Transaction } from "@/db/models/Transaction";
+import { User } from "@/db/models/User";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
@@ -28,6 +31,10 @@ export async function connectDB() {
   }
 
   try {
+   await import("@/db/models/User");
+   await import("@/db/models/PaymentMethod");
+   await import("@/db/models/PaymentGroup");
+   await import("@/db/models/Transaction");
     cached.conn = await cached.promise;
     return cached.conn;
   } catch (error) {

@@ -1,18 +1,17 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, Target } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MoreHorizontal, Target } from "lucide-react";
 
 interface CreditCardProps {
   type: string;
   number: string;
   holder: string;
   expires: string;
-  balance: string;
-  status: 'active' | 'inactive';
+  status: true | false;
   gradient?: string;
   className?: string;
 }
@@ -22,22 +21,27 @@ export function CreditCard({
   number,
   holder,
   expires,
-  balance,
   status,
-  gradient = "from-orange-500 to-red-600",
-  className = ""
+  gradient = "",
+  className = "",
 }: CreditCardProps) {
+  const validGradient =
+    gradient && gradient.includes("from-") && gradient.includes("to-")
+      ? gradient
+      : "from-orange-500 to-red-600";
   return (
     <motion.div
       whileHover={{ scale: 1.02, y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className={className}
     >
-      <Card className={`relative p-6 text-white bg-gradient-to-br ${gradient} border-0 shadow-lg overflow-hidden`}>
+      <Card
+        className={`relative p-6 text-white bg-gradient-to-br ${validGradient} border-0 shadow-lg overflow-hidden`}
+      >
         <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
           <div className="w-full h-full bg-white rounded-full transform translate-x-8 -translate-y-8" />
         </div>
-        
+
         <div className="relative z-10">
           <div className="flex items-start justify-between mb-8">
             <div className="flex items-center space-x-2">
@@ -49,16 +53,17 @@ export function CreditCard({
               <span className="text-lg font-bold tracking-wider">
                 {type.toUpperCase()}
               </span>
-              <Badge variant={status === 'active' ? 'default' : 'secondary'} className="text-xs">
-                {status}
+              <Badge
+                variant={!status ? "default" : "secondary"}
+                className="text-xs"
+              >
+                {status ? "active" : "inactive"}
               </Badge>
             </div>
           </div>
 
           <div className="mb-6">
-            <p className="text-xl font-bold tracking-widest">
-              {number}
-            </p>
+            <p className="text-xl font-bold tracking-widest">{number}</p>
           </div>
 
           <div className="flex items-end justify-between">
