@@ -159,7 +159,7 @@ export default function PaymentGroupDetailsPage() {
                   holder={card.details.cardHolderName}
                   expires={card.details.expiryDate}
                   status={card.active}
-                  gradient={card.bgColor}
+                  gradient={"from-orange-600 to-red-700"}
                   className="max-w-sm"
                 />
                 {/* Details */}

@@ -498,7 +498,7 @@ export default function TransactionsPage() {
                   <SelectItem
                     key={method._id || idx}
                     value={method._id}
-                    className="p-0 focus:bg-transparent data-[highlighted]:bg-transparent rounded-lg mb-2 last:mb-0"
+                    className="p-0 w-full block focus:bg-transparent data-[highlighted]:bg-transparent rounded-lg mb-2 last:mb-0"
                   >
                     <div className="flex items-center gap-3 p-3 w-full rounded-lg border border-gray-100 bg-white hover:border-orange-200 hover:bg-orange-50/30 transition-all duration-200">
                       <div
