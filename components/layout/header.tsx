@@ -116,10 +116,10 @@ export function Header() {
                   <User className="w-4 h-4 text-gray-600" />
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100 ">
+                {/* <DropdownMenuItem className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100 ">
                   <Settings className="w-4 h-4 text-gray-600" />
                   Settings
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem
                   onClick={handleSignOut}
                   className="flex items-center gap-2 px-3 py-2 cursor-pointer text-red-600 hover:bg-gray-100 hover:text-red-400"

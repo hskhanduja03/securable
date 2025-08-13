@@ -36,7 +36,7 @@ export default function SignInPage() {
   useEffect(() => {
     const checkToken = async () => {
       const token = accessToken || localStorage.getItem("accessToken");
-      
+
       if (!token) return;
 
       try {
@@ -126,25 +126,20 @@ export default function SignInPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Social Login Buttons */}
-            <div className="grid grid-cols-3 gap-3">
-              <Button variant="outline" size="sm" className="h-10">
-                <Chrome className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="h-10">
-                <Apple className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="h-10">
-                <Github className="w-4 h-4" />
-              </Button>
-            </div>
 
-            <div className="relative">
+            <div className="relative flex items-center justify-center">
+              {/* Center line */}
               <div className="absolute inset-0 flex items-center">
-                <Separator />
+                <Separator className="bg-gray-200 dark:bg-gray-700" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-900 px-2 text-gray-500">
-                  Or continue with
+
+              {/* Text container */}
+              <div className="relative flex flex-wrap items-center justify-center gap-2 px-3 bg-white dark:bg-gray-900 text-xs sm:text-sm rounded-full border border-gray-200 dark:border-gray-700 shadow-sm">
+                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                  Temporary User
+                </span>
+                <span className="text-gray-500 dark:text-gray-400 font-mono">
+                  email: h@h.com | password: Hsk12345#
                 </span>
               </div>
             </div>

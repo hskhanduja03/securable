@@ -32,7 +32,7 @@ type NavItem = {
 const baseNavItems: NavItem[] = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
   // { icon: CreditCard, label: "Cards", href: "/cards" },
-  { icon: BarChart3, label: "Analytics", href: "/analytics" },
+  // { icon: BarChart3, label: "Analytics", href: "/analytics" },
   { icon: ArrowUpDown, label: "Transactions", href: "/transactions" },
   {
     icon: CreditCardIcon,
@@ -197,7 +197,7 @@ export function Sidebar() {
       </nav>
 
       {/* Settings Icon */}
-      <div className="border-t border-border p-4">
+      {/* <div className="border-t border-border p-4">
         <Link
           href="/settings"
           className={cn(
@@ -208,7 +208,7 @@ export function Sidebar() {
           <Settings className="w-5 h-5" />
           {!isCollapsed && <span>Settings</span>}
         </Link>
-      </div>
+      </div> */}
     </motion.div>
   );
 

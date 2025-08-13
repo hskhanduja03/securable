@@ -54,7 +54,7 @@ export function CreditCard({
                 {type.toUpperCase()}
               </span>
               <Badge
-                variant={!status ? "default" : "secondary"}
+                variant={status ? "secondary" : "default"}
                 className="text-xs"
               >
                 {status ? "active" : "inactive"}

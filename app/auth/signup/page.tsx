@@ -126,29 +126,6 @@ export default function SignUpPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Social Login Buttons */}
-            <div className="grid grid-cols-3 gap-3">
-              <Button variant="outline" size="sm" className="h-10">
-                <Chrome className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="h-10">
-                <Apple className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="sm" className="h-10">
-                <Github className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white dark:bg-gray-900 px-2 text-gray-500">
-                  Or continue with
-                </span>
-              </div>
-            </div>
 
             {/* Sign Up Form */}
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -14,11 +14,6 @@ interface IPaymentGroup {
   // Add other properties you have for PaymentGroup
 }
 
-interface IUser {
-  _id: mongoose.Types.ObjectId;
-  paymentGroups: mongoose.Types.ObjectId[];
-  // Add other properties you have for User
-}
 
 export async function GET(req: Request) {
   try {
